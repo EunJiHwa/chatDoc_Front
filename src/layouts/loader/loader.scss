@@ -1,0 +1,23 @@
+.fallback-spinner {
+  position: relative;
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+.loading {
+  position: absolute;
+  left: calc(50% - 35px);
+  top: 50%;
+  width: 300px;
+  height: 55px;
+  border-radius: 100vmax;
+  // -webkit-box-sizing: border-box;
+  // box-sizing: border-box;
+  border: 3px solid transparent;
+  background-color: #ffffffab;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: rgba(161, 90, 202, 0.933); /* 텍스트 색상 설정 */
+}
