@@ -9,7 +9,7 @@ const navigation = [
     icon: "bi bi-speedometer2",
   },
   {
-    title: "챗Doc",
+    title: "ChatDoc",
     href: "/ChatDoc",
     icon: "bi bi-card-text",
   },

@@ -153,11 +153,12 @@ const Message = ({
         <Typing speed={50} onFinishedTyping={() => onEndTyping(id)}>
           <p>
             {/* <b>AI</b>: {text} */}
-            <b>AI</b>:
+            <b>AI</b> :
             {text.split("\n").map((line) => {
+              let data = line === "" ? " " : line;
               return (
                 <span>
-                  {line}
+                  {data}
                   <br />
                 </span>
               );

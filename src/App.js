@@ -20,9 +20,6 @@ const Alerts = lazy(() => import("./views/ui/Alerts"));
 const Badges = lazy(() => import("./views/ui/Badges"));
 const Buttons = lazy(() => import("./views/ui/Buttons"));
 const Cards = lazy(() => import("./views/ui/Cards"));
-const QuoutationSalesStatusList = lazy(() =>
-  import("./views/QuoutationSalesStatusList")
-);
 const ChatDoc = lazy(() => import("./views/ChatDoc"));
 
 const App = () => {
@@ -37,10 +34,6 @@ const App = () => {
           <Route path="/Buttons" element={<Buttons />} />
           <Route path="/Cards" element={<Cards />} />
           <Route path="/ChatDoc" element={<ChatDoc />} />
-          <Route
-            path="/QuoutationSalesStatusList"
-            element={<QuoutationSalesStatusList />}
-          />
         </Route>
       </Routes>
     </Router>
