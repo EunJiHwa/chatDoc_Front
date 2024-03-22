@@ -8,7 +8,7 @@ import bg4 from "../assets/images/bg/gun2.png";
 const BlogData = [
   {
     image: bg1,
-    title: "ChatDoc",
+    title: "ChatDocs",
     subtitle: "ChatDoc",
     description: "",
     btnbg: "primary",

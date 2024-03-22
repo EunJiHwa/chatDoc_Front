@@ -1,5 +1,5 @@
 // import React, { useEffect } from "react"; /*배포용 */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Typing from "react-typing-animation";
 import "../assets/scss/chat.scss";
 import axios from "axios";
@@ -13,6 +13,8 @@ const ChatDoc = () => {
   const [oldMessage, setOldMessage] = useState([]);
   const [spin, setSpin] = useState(false);
 
+  const messageEndRef = useRef(null);
+
   console.log("oldMessage", oldMessage);
   const handleSendMessage = async (message) => {
     let mid = Date.now();
@@ -24,7 +26,7 @@ const ChatDoc = () => {
     try {
       console.log("text", message.id);
       const response = await axios.post(
-        "http://127.0.0.1:8000/chatqna",
+        "/api/chatqna",
         {
           question: message,
           mid: mid,
@@ -62,6 +64,10 @@ const ChatDoc = () => {
   };
 
   useEffect(() => {
+    messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
     if (currentTypingId === null) {
       const nextTypingMessage = messages.find(
         (msg) => !msg.isUser && msg.isTyping
@@ -75,8 +81,8 @@ const ChatDoc = () => {
   //채팅 창 틀
   return (
     <div className="chat">
-      <div className="chat-box">
-        <h1>ChatDoc</h1>
+      <div className="chat-box ">
+        <h1>ChatDocs</h1>
         <div className="messages-list">
           <OldMessageFrom messages={oldMessage} />
           {spin ? (
@@ -101,6 +107,7 @@ const ChatDoc = () => {
               onEndTyping={handleEndTyping}
             />
           )}
+          <div ref={messageEndRef}></div>
         </div>
         <MessageForm onSendMessage={handleSendMessage} />
       </div>

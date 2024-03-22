@@ -1,10 +1,10 @@
 import React from "react";
-import logo from "../assets/images/logos/ic_launcher.png";
+import logo from "../assets/images/logos/kctclogl.png";
 
 const Logo = () => {
   return (
     <a href="/">
-      <img src={logo} className="rounded-circle" width="100" />
+      <img src={logo} className="rounded-circle" width="200" />
     </a>
   );
 };
