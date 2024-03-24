@@ -9,35 +9,41 @@ import { Spinner } from "reactstrap";
 const ChatDoc = () => {
   const [messages, setMessages] = useState([]);
   const [currentTypingId, setCurrentTypingId] = useState(null);
-  const [messageList, setMessageList] = useState([]);
-  const [oldMessage, setOldMessage] = useState([]);
   const [spin, setSpin] = useState(false);
 
   const messageEndRef = useRef(null);
 
-  console.log("oldMessage", oldMessage);
   const handleSendMessage = async (message) => {
     let mid = Date.now();
+
+    //바로 입력
     setMessages((prevMessages) => [
       ...prevMessages,
       { text: message, isUser: true },
     ]);
+
     setSpin(true);
+
     try {
       console.log("text", message.id);
-      const response = await axios.post(
-        "/api/chatqna",
-        {
-          question: message,
-          mid: mid,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const responseData = response.data;
+      // const response = await axios.post(
+      //   // "/api/chatqna",
+      //   "http://127.0.0.1:8000/api/chatqna",
+      //   {
+      //     question: message,
+      //     mid: mid,
+      //   },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
+      // );
+
+      //const responseData = response.data;
+      const responseData = "ddddddddddddddddddddddsfe2t666747u8989dsgsws00---=";
+
+      //답변
       setMessages((prevMessages) => [
         ...prevMessages,
         {
@@ -68,10 +74,12 @@ const ChatDoc = () => {
   }, [messages]);
 
   useEffect(() => {
+    console.log("messages", messages);
     if (currentTypingId === null) {
       const nextTypingMessage = messages.find(
         (msg) => !msg.isUser && msg.isTyping
       );
+      console.log("currentTypingId:", currentTypingId);
       if (nextTypingMessage) {
         setCurrentTypingId(nextTypingMessage.id);
       }
@@ -84,7 +92,6 @@ const ChatDoc = () => {
       <div className="chat-box ">
         <h1>ChatDocs</h1>
         <div className="messages-list">
-          <OldMessageFrom messages={oldMessage} />
           {spin ? (
             <>
               <div className="loading">
@@ -115,26 +122,8 @@ const ChatDoc = () => {
   );
 };
 
-const OldMessageFrom = ({ messages }) => (
-  <div>
-    {messages &&
-      messages.data &&
-      messages.data.map((message) =>
-        message.User ? (
-          <Message key={message.User} text={message.User} isUser={true} />
-        ) : (
-          <Message
-            key={message.mid}
-            text={message.Chatbot}
-            isUser={false}
-            isTyping={false}
-          />
-        )
-      )}
-  </div>
-);
 const MessageList = ({ messages, currentTypingId, onEndTyping }) => (
-  <div className="messages-list">
+  <div>
     {messages.map((message, index) => (
       <Message
         key={index}
