@@ -10,6 +10,7 @@ const ChatDoc = () => {
   const [messages, setMessages] = useState([]);
   const [currentTypingId, setCurrentTypingId] = useState(null);
   const [spin, setSpin] = useState(false);
+  const [isTypingFinished, setIsTypingFinished] = useState(true);
 
   const messageEndRef = useRef(null);
 
@@ -23,26 +24,26 @@ const ChatDoc = () => {
     ]);
 
     setSpin(true);
+    setIsTypingFinished(false);
 
     try {
-      console.log("text", message.id);
-      // const response = await axios.post(
-      //   // "/api/chatqna",
-      //   "http://127.0.0.1:8000/api/chatqna",
-      //   {
-      //     question: message,
-      //     mid: mid,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //   }
-      // );
+      // console.log("text", message.id);
+      const response = await axios.post(
+        "/api/chatqna",
+        // "http://127.0.0.1:8000/api/chatqna",
+        {
+          question: message,
+          mid: mid,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      //const responseData = response.data;
-      const responseData = "ddddddddddddddddddddddsfe2t666747u8989dsgsws00---=";
-
+      const responseData = response.data;
+      // const responseData = "dfsdfse";
       //답변
       setMessages((prevMessages) => [
         ...prevMessages,
@@ -60,6 +61,7 @@ const ChatDoc = () => {
     }
   };
 
+  // console.log("isTypingFinished chatdocs", isTypingFinished);
   const handleEndTyping = (id) => {
     setMessages((prevMessages) =>
       prevMessages.map((msg) =>
@@ -67,6 +69,10 @@ const ChatDoc = () => {
       )
     );
     setCurrentTypingId(null);
+  };
+
+  const handleTypingFinished = () => {
+    setIsTypingFinished(true);
   };
 
   useEffect(() => {
@@ -105,6 +111,7 @@ const ChatDoc = () => {
                 currentTypingId={currentTypingId}
                 onEndTy
                 ping={handleEndTyping}
+                handleTypingFinished={handleTypingFinished} // 콜백 함수 전달
               />
             </>
           ) : (
@@ -112,17 +119,26 @@ const ChatDoc = () => {
               messages={messages}
               currentTypingId={currentTypingId}
               onEndTyping={handleEndTyping}
+              handleTypingFinished={handleTypingFinished} // 콜백 함수 전달
             />
           )}
           <div ref={messageEndRef}></div>
         </div>
-        <MessageForm onSendMessage={handleSendMessage} />
+        <MessageForm
+          onSendMessage={handleSendMessage}
+          isTypingFinished={isTypingFinished}
+        />
       </div>
     </div>
   );
 };
 
-const MessageList = ({ messages, currentTypingId, onEndTyping }) => (
+const MessageList = ({
+  messages,
+  currentTypingId,
+  onEndTyping,
+  handleTypingFinished,
+}) => (
   <div>
     {messages.map((message, index) => (
       <Message
@@ -130,6 +146,7 @@ const MessageList = ({ messages, currentTypingId, onEndTyping }) => (
         {...message}
         onEndTyping={onEndTyping}
         currentTypingId={currentTypingId}
+        handleTypingFinished={handleTypingFinished}
       />
     ))}
   </div>
@@ -142,11 +159,19 @@ const Message = ({
   id,
   onEndTyping,
   currentTypingId,
+  handleTypingFinished,
 }) => {
   return (
     <div className={isUser ? "user-message" : "ai-message"}>
       {isTyping && currentTypingId === id ? (
-        <Typing speed={50} onFinishedTyping={() => onEndTyping(id)}>
+        //<Typing speed={50} onFinishedTyping={() => onEndTyping(id)}>
+        <Typing
+          speed={50}
+          onFinishedTyping={() => {
+            onEndTyping(id);
+            handleTypingFinished();
+          }}
+        >
           <p>
             {/* <b>AI</b>: {text} */}
             <b>AI</b> :
@@ -180,8 +205,9 @@ const Message = ({
 };
 
 // 채팅창 입력란
-const MessageForm = ({ onSendMessage }) => {
+const MessageForm = ({ onSendMessage, isTypingFinished }) => {
   const [message, setMessage] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -189,6 +215,18 @@ const MessageForm = ({ onSendMessage }) => {
     setMessage("");
   };
 
+  useEffect(() => {
+    if (isTypingFinished === true) {
+      // console.log(">>>>");
+      setIsButtonDisabled(false);
+    } else {
+      // console.log(">>>>22222");
+      setIsButtonDisabled(true);
+    }
+  }, [isTypingFinished]);
+
+  // console.log("isTypingFinished", isTypingFinished);
+  // console.log("setIsButtonDisabled", isButtonDisabled);
   return (
     <form onSubmit={handleSubmit} className="message-form">
       <input
@@ -197,7 +235,7 @@ const MessageForm = ({ onSendMessage }) => {
         onChange={(e) => setMessage(e.target.value)}
         className="message-input"
       />
-      <button type="submit" className="send-button">
+      <button type="submit" className="send-button" disabled={isButtonDisabled}>
         Send
       </button>
     </form>
